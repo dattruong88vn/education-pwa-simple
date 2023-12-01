@@ -58,4 +58,18 @@
         - SW có quyền stop request gửi lên server của browser hoặc thay đổi response trả về.
         - Khi PWA hoạt động offline, browser gửi request lên server sẽ bị SW chặn lại và trả về data cache trước đó.
 
+# 8. Cache
+
+        - Thực hiện khi register SW, cụ thể là trong fn handler event install.
+        - Sử dụng method open của global object caches, return về promise
+                + caches.open("staticCacheName")
+                + Resolve function có tham số là cache. Sử dụng method cache.add(string) hoặc cache.addAll([string]) để thêm các request lên server: như request load html, css, js, font, image....
+                + Ví dụ:
+                        cache.addAll(["/", "/index.html", "/css/global.css"])
+
+        - Để đảm bảo toàn bộ quá trình cache hoàn thành khi SW install, sau đó mới tiến hành activate. Sử dụng method waitUntil của tham số event (tham số fn handler). Pass toàn bộ method caches.open như đối số của method waitUntil.
+                + Ví dụ: event.waitUntil(caches.open("staticCacheName").then(cache => {
+                        cache.addAll(["/", "/index.html","/css/global.css"])
+                }))
+
 # education-pwa-simple
